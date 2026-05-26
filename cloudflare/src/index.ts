@@ -19,6 +19,18 @@ app.use('*', async (c, next) => {
   await next();
 });
 
+app.get('/static/*', (c) => {
+  const url = new URL(c.req.url);
+  url.pathname = url.pathname.replace(/^\/static/, '') || '/';
+  return c.env.ASSETS.fetch(new Request(url.toString(), c.req.raw));
+});
+
+app.get('/admin', (c) => {
+  const url = new URL(c.req.url);
+  url.pathname = '/admin.html';
+  return c.env.ASSETS.fetch(new Request(url.toString(), c.req.raw));
+});
+
 app.get('/api/info', (c) => c.json({ model: c.env.OPENAI_MODEL || 'gpt-4o' }));
 app.route('/api/auth', authRoutes);
 app.route('/api/tasks', taskRoutes);
