@@ -1,0 +1,22 @@
+name = "mytask-cf"
+main = "cloudflare/src/index.ts"
+compatibility_date = "2026-05-26"
+workers_dev = false
+
+[[routes]]
+pattern = "cchk.uk/*"
+zone_name = "cchk.uk"
+
+[assets]
+directory = "static"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mytask_cf"
+database_id = "4aa0013f-dba6-46fd-82bd-29e9221a01c2"
+migrations_dir = "cloudflare/migrations"
+
+[vars]
+OPENAI_MODEL = "meta/llama-3.1-8b-instruct"

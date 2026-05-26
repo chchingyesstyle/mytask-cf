@@ -6,7 +6,10 @@
     "cloudflare"
   ],
   "scripts": {
-    "deploy": "npm --workspace cloudflare exec wrangler -- deploy",
+    "deploy": "wrangler deploy",
     "typecheck": "npm --workspace cloudflare run typecheck"
+  },
+  "devDependencies": {
+    "wrangler": "^4.17.0"
   }
 }
