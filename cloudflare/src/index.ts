@@ -2,7 +2,9 @@ import { Hono } from 'hono';
 import { seedDefaults } from './db';
 import { jsonError } from './http';
 import { authRoutes } from './routes/auth';
+import { chatRoutes } from './routes/chat';
 import { dashboardRoutes } from './routes/dashboard';
+import { kbRoutes } from './routes/kb';
 import { projectRoutes } from './routes/projects';
 import { statusRoutes } from './routes/statuses';
 import { tagRoutes } from './routes/tags';
@@ -25,6 +27,8 @@ app.route('/api/projects', projectRoutes);
 app.route('/api/statuses', statusRoutes);
 app.route('/api/users', userRoutes);
 app.route('/api/dashboard', dashboardRoutes);
+app.route('/api/kb', kbRoutes);
+app.route('/api/chat', chatRoutes);
 
 app.onError((error, c) => jsonError(c, error));
 

@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { buildTaskActionPrompt, openAIText } from '../ai';
 import { getCurrentUser } from '../auth';
 import { ApiError, intParam, jsonError, parseNullableInt, readJson, requireNonEmpty } from '../http';
 import type { AppVariables, Env, StatusRow, TagRow, TaskRow, UserRow } from '../types';
@@ -244,6 +245,28 @@ taskRoutes.delete('/:id/tags/:tagId', async (c) => {
     if (!canAccess(task, user)) throw new ApiError(403, 'Not authorized');
     await c.env.DB.prepare('DELETE FROM task_tags WHERE task_id = ? AND tag_id = ?').bind(taskId, tagId).run();
     return new Response(null, { status: 204 });
+  } catch (error) {
+    return jsonError(c, error);
+  }
+});
+
+
+taskRoutes.post('/:id/ai-action', async (c) => {
+  try {
+    const user = await getCurrentUser(c.env, c.req.header('Authorization'));
+    const id = intParam(c.req.param('id'), 'task id');
+    const task = await getTask(c.env, id);
+    if (!task) throw new ApiError(404, 'Task not found');
+    if (!canAccess(task, user)) throw new ApiError(403, 'Not authorized');
+    const body = await readJson<{ action?: string; custom_prompt?: string }>(c);
+    const docs = await c.env.DB.prepare('SELECT title, extracted_text FROM kb_documents WHERE owner_id = ? AND (task_id = ? OR task_id IS NULL) AND extracted_text IS NOT NULL ORDER BY created_at DESC LIMIT 8')
+      .bind(user.id, id)
+      .all<{ title: string; extracted_text: string }>();
+    const kbText = (docs.results || []).map((d) => `[${d.title}]\n${d.extracted_text.slice(0, 1600)}`).join('\n\n');
+    const taskContext = `Title: ${task.title}\nStatus: ${task.status_name || 'Todo'}\nPriority: ${task.priority}\nDue: ${task.due_date || 'none'}\nNotes: ${task.notes || 'none'}\n\nKnowledge:\n${kbText || 'No extracted KB text.'}`;
+    const prompt = buildTaskActionPrompt(body.action || '', taskContext, body.custom_prompt);
+    const result = await openAIText(c.env, [{ role: 'user', content: prompt }], 600);
+    return c.json({ result });
   } catch (error) {
     return jsonError(c, error);
   }
