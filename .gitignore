@@ -13,3 +13,5 @@ certs/
 
 # Cloudflare local dependencies
 cloudflare/node_modules/
+cloudflare/.wrangler/
+cloudflare/.dev.vars

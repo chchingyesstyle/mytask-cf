@@ -6,6 +6,7 @@ export async function seedDefaults(env: Env): Promise<void> {
     "INSERT OR IGNORE INTO statuses (id, name, color, position, project_id) VALUES (1, 'Todo', '#6b7280', 0, NULL), (2, 'In Progress', '#4a90d9', 1, NULL), (3, 'Done', '#2ecc71', 2, NULL)"
   ).run();
 
+  if (!env.ADMIN_PASSWORD) return;
   const existing = await env.DB.prepare('SELECT id FROM users WHERE username = ?').bind('admin').first();
   if (!existing) {
     const passwordHash = await hashPassword(env.ADMIN_PASSWORD);
