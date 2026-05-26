@@ -15,7 +15,7 @@ not_found_handling = "single-page-application"
 [[d1_databases]]
 binding = "DB"
 database_name = "mytask_cf"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "4aa0013f-dba6-46fd-82bd-29e9221a01c2"
 migrations_dir = "migrations"
 
 [[r2_buckets]]
