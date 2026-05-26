@@ -73,3 +73,15 @@ export function bearerToken(header: string | undefined): string {
   if (!header || !header.startsWith('Bearer ')) throw new ApiError(401, 'Not authenticated');
   return header.slice('Bearer '.length);
 }
+
+export async function getCurrentUser(env: Env, authorization: string | undefined): Promise<UserRow> {
+  const token = bearerToken(authorization);
+  const payload = await verifyToken(env, token);
+  const user = await env.DB.prepare('SELECT * FROM users WHERE id = ?').bind(Number(payload.sub)).first<UserRow>();
+  if (!user) throw new ApiError(401, 'User not found');
+  return user;
+}
+
+export function requireAdmin(user: UserRow): void {
+  if (user.role !== 'admin') throw new ApiError(403, 'Admin access required');
+}
