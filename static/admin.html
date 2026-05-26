@@ -4,8 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MyTask Admin</title>
+  <script>
+    (function() {
+      var t = localStorage.getItem('theme');
+      if (t && t !== 'dark') document.documentElement.classList.add(t);
+    })();
+  </script>
   <link rel="stylesheet" href="/static/style.css">
-  <style>body.admin-body { overflow-y: auto; height: auto; min-height: 100vh; }</style>
+  <style>
+    body.admin-body { overflow-y: auto; height: auto; min-height: 100vh; }
+    html.light body.admin-body, html.forest body.admin-body, html.amber body.admin-body, html.midnight body.admin-body { background: var(--bg-main); }
+  </style>
 </head>
 <body class="admin-body">
   <div id="admin-app" class="admin-shell" style="display:none">

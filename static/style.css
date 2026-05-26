@@ -16,6 +16,7 @@
   --r-lg: 10px;
 }
 
+html.light,
 body.light {
   color-scheme: light;
   --bg-base:  oklch(93%   0.010 252);
@@ -27,6 +28,7 @@ body.light {
   --text-dim: oklch(45%   0.010 252);
   --accent:   oklch(44%   0.19  228);
 }
+html.forest,
 body.forest {
   color-scheme: dark;
   --bg-base:  oklch(13%   0.012 155);
@@ -38,6 +40,7 @@ body.forest {
   --text-dim: oklch(65%   0.012 155);
   --accent:   oklch(62%   0.15  155);
 }
+html.amber,
 body.amber {
   color-scheme: light;
   --bg-base:  oklch(94%   0.020 75);
@@ -49,6 +52,7 @@ body.amber {
   --text-dim: oklch(45%   0.015 60);
   --accent:   oklch(52%   0.18  52);
 }
+html.midnight,
 body.midnight {
   color-scheme: dark;
   --bg-base:  oklch(10%   0.010 285);
@@ -1028,7 +1032,7 @@ body.amber .tag-row:hover { background: rgba(0,0,0,.02); }
 
 /* Admin panel */
 .admin-body {
-  background: var(--bg-main);
+  background: oklch(13% 0.008 65);
   color: var(--text);
 }
 .admin-shell {
