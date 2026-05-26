@@ -1,9 +1,23 @@
 # MyTask-CF
 
-Cloudflare serverless version of MyTask, deployed at:
+MyTask-CF is the Cloudflare serverless version of MyTask, a personal AI task manager for tracking tasks, projects, statuses, tags, text knowledge-base notes, and AI-assisted task work.
+
+Production URL:
 
 ```text
 https://cf.cchk.uk
+```
+
+## What This Repo Contains
+
+This repository is Cloudflare-only. The old Python/FastAPI/Docker implementation was removed so the repo is easier to review and maintain.
+
+```text
+cloudflare/        Cloudflare Worker API, Wrangler config, D1 migrations
+static/            Vanilla HTML/CSS/JS frontend served by Cloudflare Assets
+docs/superpowers/  Migration planning/spec notes
+PRODUCT.md         Product/design notes
+AGENTS.md          Instructions for coding agents working in this repo
 ```
 
 ## Stack
@@ -13,10 +27,24 @@ https://cf.cchk.uk
 - TypeScript
 - Cloudflare D1
 - Cloudflare Assets
-- Existing vanilla HTML/CSS/JS frontend in `static/`
-- OpenAI-compatible AI endpoint, currently NVIDIA NIM
+- Vanilla HTML/CSS/JS frontend
+- OpenAI-compatible AI endpoint
 
-## Current AI
+## Features
+
+- Username/password login with JWT
+- Admin user seeded from `ADMIN_PASSWORD`
+- Tasks and subtasks
+- Projects and project-specific statuses
+- Tags
+- Dashboard summary
+- Text/Markdown knowledge base
+- AI chat
+- Task AI actions
+
+## Current AI Provider
+
+The deployed app currently uses NVIDIA NIM through an OpenAI-compatible API:
 
 ```text
 OPENAI_BASE_URL=https://integrate.api.nvidia.com/v1
@@ -25,36 +53,43 @@ OPENAI_MODEL=meta/llama-3.1-8b-instruct
 
 Secrets are stored in Cloudflare Worker secrets, not in git.
 
-## Repository Layout
+## Knowledge Base Storage
 
-```text
-cloudflare/        Worker API, Wrangler config, D1 migrations
-static/            Frontend HTML/CSS/JS served by Cloudflare Assets
-docs/superpowers/  Planning/spec notes used during the migration
-PRODUCT.md         Product/design notes
-```
+This version intentionally does not use Cloudflare R2 to avoid usage-based object-storage billing.
 
-## Knowledge Base
-
-This version does not use R2 to avoid usage-based storage billing. KB support is text-only:
+KB support is text-only:
 
 - `.txt`
 - `.md`
 - 1 MB max per document
-- stored directly in D1
+- stored directly in D1 as extracted text
 
-PDF, DOCX, and image extraction can be added later if R2 or another storage service is enabled.
+PDF, DOCX, image upload, and OCR can be added later if R2 or another storage/extraction service is enabled.
+
+## Cloudflare Resources
+
+Production uses:
+
+```text
+Worker: mytask-cf
+Route: cf.cchk.uk/*
+D1 database: mytask_cf
+workers.dev: disabled
+R2: not used
+```
+
+`workers.dev` is disabled intentionally because the production route is `cf.cchk.uk/*` and the account has not completed workers.dev subdomain onboarding.
 
 ## Local Development
+
+Install dependencies:
 
 ```bash
 cd cloudflare
 npm install
-npm run db:migrate:local
-npm run dev
 ```
 
-Create `cloudflare/.dev.vars` for local secrets:
+Create local secrets in `cloudflare/.dev.vars`:
 
 ```env
 JWT_SECRET_KEY=local-dev-secret
@@ -63,19 +98,67 @@ OPENAI_API_KEY=your-api-key
 OPENAI_BASE_URL=https://integrate.api.nvidia.com/v1
 ```
 
-## Deploy
+Run locally:
 
 ```bash
-cd cloudflare
+npm run db:migrate:local
+npm run dev
+```
+
+Open the local Wrangler URL and log in as:
+
+```text
+username: admin
+password: value of ADMIN_PASSWORD
+```
+
+If `ADMIN_PASSWORD` is missing, the Worker will not seed the `admin` user.
+
+## Deploy
+
+From `cloudflare/`:
+
+```bash
 npm run typecheck
 npm run db:migrate
 npm run deploy
 ```
 
-The Worker deploys only to the configured route:
+Set production secrets with Wrangler when needed:
 
-```text
-cf.cchk.uk/*
+```bash
+npx wrangler secret put JWT_SECRET_KEY
+npx wrangler secret put ADMIN_PASSWORD
+npx wrangler secret put OPENAI_API_KEY
+npx wrangler secret put OPENAI_BASE_URL
 ```
 
-`workers.dev` is disabled intentionally.
+## Verification
+
+Basic production checks:
+
+```bash
+curl -A 'Mozilla/5.0' https://cf.cchk.uk/api/info
+```
+
+Expected response includes the deployed model name:
+
+```json
+{"model":"meta/llama-3.1-8b-instruct"}
+```
+
+Manual smoke checks:
+
+- open `https://cf.cchk.uk`
+- log in as `admin`
+- create a task
+- create a project
+- create a tag
+- create a `.txt` or `.md` KB document
+- verify dashboard updates
+- test AI chat
+- test a task AI action
+
+## Notes
+
+Some non-browser command-line clients may be blocked by Cloudflare security rules unless they use a browser-like user agent. Normal browser access should work.
