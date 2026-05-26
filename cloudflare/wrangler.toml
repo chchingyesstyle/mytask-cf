@@ -1,11 +1,11 @@
 name = "mytask-cf"
 main = "src/index.ts"
 compatibility_date = "2026-05-26"
-workers_dev = true
+workers_dev = false
 
-routes = [
-  { pattern = "cf.cchk.uk", custom_domain = true }
-]
+[[routes]]
+pattern = "cf.cchk.uk/*"
+zone_name = "cchk.uk"
 
 [assets]
 directory = "../static"
