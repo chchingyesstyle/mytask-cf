@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MyTask Admin</title>
   <link rel="stylesheet" href="/static/style.css">
-  <style>body { overflow-y: auto; height: auto; }</style>
+  <style>body.admin-body { overflow-y: auto; height: auto; min-height: 100vh; }</style>
 </head>
-<body>
-  <div id="admin-app" style="display:none;flex-direction:column;min-height:100vh">
+<body class="admin-body">
+  <div id="admin-app" class="admin-shell" style="display:none">
     <nav class="topnav">
       <div class="nav-left">
         <a href="/" class="app-logo">MyTask</a>
@@ -25,7 +25,7 @@
       <div class="create-user-form">
         <div id="tag-error" class="error-msg" style="display:none"></div>
         <div id="tag-list" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;min-height:32px"></div>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <div class="admin-inline-form">
           <input id="new-tag-name" type="text" placeholder="Tag name" style="flex:1;min-width:120px">
           <input id="new-tag-color" type="color" value="#4a90d9" style="width:40px;padding:2px;cursor:pointer">
           <button id="create-tag-btn">Create Tag</button>
