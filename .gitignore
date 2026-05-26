@@ -6,6 +6,7 @@ __pycache__/
 *.db
 .superpowers/
 .venv/
+node_modules/
 *.egg-info/
 dist/
 build/

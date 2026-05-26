@@ -1,0 +1,12 @@
+{
+  "name": "mytask-cf-repo",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "cloudflare"
+  ],
+  "scripts": {
+    "deploy": "npm --workspace cloudflare exec wrangler -- deploy",
+    "typecheck": "npm --workspace cloudflare run typecheck"
+  }
+}
