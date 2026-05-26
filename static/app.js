@@ -3489,7 +3489,7 @@ function renderTaskDocs(task, detailEl) {
       docs.forEach(function(doc) {
         var pill = document.createElement('span');
         pill.className = 'task-doc-pill';
-        var icons = { pdf: '📄', docx: '📝', txt: '📄', md: '📄', jpg: '🖼', jpeg: '🖼', png: '🖼' };
+        var icons = { txt: 'TXT', md: 'MD' };
         var pillLabel = document.createElement('span');
         pillLabel.textContent = (icons[doc.file_type] || '📄') + ' ' + doc.title;
         pillLabel.style.cssText = 'cursor:pointer;text-decoration:underline;margin-right:4px';
@@ -3517,12 +3517,12 @@ function renderTaskDocs(task, detailEl) {
       var fi = document.createElement('input');
       fi.type = 'file';
       fi.multiple = true;
-      fi.accept = '.pdf,.docx,.txt,.md,.jpg,.jpeg,.png';
+      fi.accept = '.txt,.md';
       fi.style.display = 'none';
       fi.addEventListener('change', function() {
         var files = Array.from(fi.files);
         if (!files.length) return;
-        attachBtn.textContent = 'Uploading...';
+        attachBtn.textContent = 'Adding...';
         attachBtn.disabled = true;
         var promises = files.map(function(file) {
           var fd = new FormData();
@@ -3538,7 +3538,7 @@ function renderTaskDocs(task, detailEl) {
         }).catch(function() {
           attachBtn.textContent = '+ Attach';
           attachBtn.disabled = false;
-          showToast('Upload failed. Please try again.');
+          showToast('Text upload failed. Please use .txt or .md.');
         });
       });
       attachBtn.addEventListener('click', function() { fi.click(); });
@@ -3783,17 +3783,17 @@ function renderKBPage() {
 
   var uploadBtn = document.createElement('button');
   uploadBtn.className = 'btn-primary kb-upload-btn';
-  uploadBtn.textContent = '+ Upload Doc';
+  uploadBtn.textContent = '+ Add Text';
   var fileInput = document.createElement('input');
   fileInput.type = 'file';
   fileInput.multiple = true;
-  fileInput.accept = '.pdf,.docx,.txt,.md,.jpg,.jpeg,.png';
+  fileInput.accept = '.txt,.md';
   fileInput.style.display = 'none';
   fileInput.addEventListener('change', function() {
     var files = Array.from(fileInput.files);
     if (!files.length) return;
     uploadBtn.disabled = true;
-    uploadBtn.textContent = 'Uploading...';
+    uploadBtn.textContent = 'Adding...';
     var promises = files.map(function(file) {
       var fd = new FormData();
       fd.append('file', file);
@@ -3802,13 +3802,13 @@ function renderKBPage() {
     Promise.all(promises).then(function() {
       fileInput.value = '';
       uploadBtn.disabled = false;
-      uploadBtn.textContent = '+ Upload Doc';
+      uploadBtn.textContent = '+ Add Text';
       renderKBPage();
     }).catch(function() {
       fileInput.value = '';
       uploadBtn.disabled = false;
-      uploadBtn.textContent = '+ Upload Doc';
-      showToast('Upload failed. Please try again.');
+      uploadBtn.textContent = '+ Add Text';
+      showToast('Text upload failed. Please use .txt or .md.');
     });
   });
   uploadBtn.addEventListener('click', function() { fileInput.click(); });
@@ -3837,7 +3837,7 @@ function renderKBPage() {
         emptyMain.textContent = 'No global documents yet.';
         var emptySub = document.createElement('div');
         emptySub.className = 'kb-drop-sub';
-        emptySub.textContent = 'Upload PDFs, DOCX, images, or text files. The AI will reference them across all tasks.';
+        emptySub.textContent = 'Add text or Markdown files. The AI will reference them across all tasks.';
         empty.appendChild(emptyIcon);
         empty.appendChild(emptyMain);
         empty.appendChild(emptySub);
@@ -3862,7 +3862,7 @@ function renderKBPage() {
 }
 
 function buildKBDocCard(doc) {
-  var icons = { pdf: '📄', docx: '📝', txt: '📄', md: '📄', jpg: '🖼', jpeg: '🖼', png: '🖼' };
+  var icons = { txt: 'TXT', md: 'MD' };
   var card = document.createElement('div');
   card.className = 'kb-doc-card';
 

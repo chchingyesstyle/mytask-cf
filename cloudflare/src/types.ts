@@ -1,6 +1,5 @@
 export type Env = {
   DB: D1Database;
-  UPLOADS: R2Bucket;
   ASSETS: Fetcher;
   JWT_SECRET_KEY: string;
   ADMIN_PASSWORD: string;

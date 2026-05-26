@@ -18,9 +18,6 @@ database_name = "mytask_cf"
 database_id = "4aa0013f-dba6-46fd-82bd-29e9221a01c2"
 migrations_dir = "migrations"
 
-[[r2_buckets]]
-binding = "UPLOADS"
-bucket_name = "mytask-cf-uploads"
 
 [vars]
 OPENAI_MODEL = "gpt-4o"

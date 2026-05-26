@@ -1,6 +1,6 @@
 # MyTask Cloudflare
 
-Cloudflare Workers/D1/R2 deployment target for MyTask.
+Cloudflare Workers/D1 deployment target for MyTask.
 
 ## Setup
 
@@ -8,7 +8,6 @@ Cloudflare Workers/D1/R2 deployment target for MyTask.
 npm install
 npx wrangler login
 npx wrangler d1 create mytask_cf
-npx wrangler r2 bucket create mytask-cf-uploads
 ```
 
 Copy the returned D1 `database_id` into `wrangler.toml`, replacing `REPLACE_WITH_D1_DATABASE_ID`.
@@ -76,7 +75,6 @@ Before deploying, run:
 ```bash
 npx wrangler login
 npx wrangler d1 create mytask_cf
-npx wrangler r2 bucket create mytask-cf-uploads
 npx wrangler secret put JWT_SECRET_KEY
 npx wrangler secret put ADMIN_PASSWORD
 npx wrangler secret put OPENAI_API_KEY
@@ -91,6 +89,11 @@ Production smoke checks:
 
 - open `https://cf.cchk.uk`
 - log in as `admin`
-- create one task, project, tag, and text KB doc
+- create one task, project, tag, and text/Markdown KB doc
 - verify dashboard updates
 - verify AI chat and task AI action behavior
+
+
+## Knowledge Base Storage
+
+This Cloudflare version does not use R2. KB documents are limited to `.txt` and `.md` files up to 1 MB. Their text is stored directly in D1 in `kb_documents.extracted_text`, so there is no usage-based R2 billing risk. PDF, DOCX, and image extraction can be added later if R2 or another storage/extraction service is enabled.
