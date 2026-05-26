@@ -87,7 +87,7 @@ After `npx wrangler d1 create mytask_cf`, copy the returned `database_id` into `
 
 Production smoke checks:
 
-- open `https://cf.cchk.uk`
+- open `https://cchk.uk`
 - log in as `admin`
 - create one task, project, tag, and text/Markdown KB doc
 - verify dashboard updates

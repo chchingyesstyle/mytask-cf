@@ -5,7 +5,7 @@ MyTask-CF is the Cloudflare serverless version of MyTask, a personal AI task man
 Production URL:
 
 ```text
-https://cf.cchk.uk
+https://cchk.uk
 ```
 
 ## What This Repo Contains
@@ -72,13 +72,13 @@ Production uses:
 
 ```text
 Worker: mytask-cf
-Route: cf.cchk.uk/*
+Route: cchk.uk/*
 D1 database: mytask_cf
 workers.dev: disabled
 R2: not used
 ```
 
-`workers.dev` is disabled intentionally because the production route is `cf.cchk.uk/*` and the account has not completed workers.dev subdomain onboarding.
+`workers.dev` is disabled intentionally because the production route is `cchk.uk/*` and the account has not completed workers.dev subdomain onboarding.
 
 ## Local Development
 
@@ -138,7 +138,7 @@ npx wrangler secret put OPENAI_BASE_URL
 Basic production checks:
 
 ```bash
-curl -A 'Mozilla/5.0' https://cf.cchk.uk/api/info
+curl -A 'Mozilla/5.0' https://cchk.uk/api/info
 ```
 
 Expected response includes the deployed model name:
@@ -149,7 +149,7 @@ Expected response includes the deployed model name:
 
 Manual smoke checks:
 
-- open `https://cf.cchk.uk`
+- open `https://cchk.uk`
 - log in as `admin`
 - create a task
 - create a project

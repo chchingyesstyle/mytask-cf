@@ -27,7 +27,7 @@ Use `npm run typecheck` after Worker code changes.
 
 ## Deployment Constraints
 
-- Production route is `cf.cchk.uk/*`.
+- Production route is `cchk.uk/*`.
 - `workers_dev = false` is intentional.
 - D1 database is `mytask_cf`.
 - R2 is intentionally not used.
