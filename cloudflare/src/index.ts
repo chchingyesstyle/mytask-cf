@@ -2,10 +2,12 @@ import { Hono } from 'hono';
 import { seedDefaults } from './db';
 import { jsonError } from './http';
 import { authRoutes } from './routes/auth';
+import { dashboardRoutes } from './routes/dashboard';
 import { projectRoutes } from './routes/projects';
 import { statusRoutes } from './routes/statuses';
 import { tagRoutes } from './routes/tags';
 import { taskRoutes } from './routes/tasks';
+import { userRoutes } from './routes/users';
 import type { AppVariables, Env } from './types';
 
 const app = new Hono<{ Bindings: Env; Variables: AppVariables }>();
@@ -21,6 +23,8 @@ app.route('/api/tasks', taskRoutes);
 app.route('/api/tags', tagRoutes);
 app.route('/api/projects', projectRoutes);
 app.route('/api/statuses', statusRoutes);
+app.route('/api/users', userRoutes);
+app.route('/api/dashboard', dashboardRoutes);
 
 app.onError((error, c) => jsonError(c, error));
 
